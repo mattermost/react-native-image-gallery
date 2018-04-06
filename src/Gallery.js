@@ -251,6 +251,7 @@ export default class Gallery extends PureComponent {
               })}
               ref={((ref) => { this.imageRefs.set(pageId, ref); })}
               key={'innerImage#' + pageId}
+              pageId={pageId}
               errorComponent={errorComponent}
               imageComponent={imageComponent}
               image={pageData}

@@ -12,6 +12,7 @@ export default class TransformableImage extends PureComponent {
             ]),
             dimensions: PropTypes.shape({ width: PropTypes.number, height: PropTypes.number })
         }).isRequired,
+        pageId: PropTypes.number.isRequired,
         style: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         onLoad: PropTypes.func,
         onLoadStart: PropTypes.func,
@@ -134,7 +135,7 @@ export default class TransformableImage extends PureComponent {
     }
 
     renderError () {
-        return (this.props.errorComponent && this.props.errorComponent()) || (
+        return (this.props.errorComponent && this.props.errorComponent(this.props.pageId)) || (
             <View style={{ flex: 1, backgroundColor: 'black', alignItems: 'center', justifyContent: 'center' }}>
                  <Text style={{ color: 'white', fontSize: 15, fontStyle: 'italic' }}>This image cannot be displayed...</Text>
             </View>
