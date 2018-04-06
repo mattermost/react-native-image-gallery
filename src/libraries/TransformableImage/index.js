@@ -9,7 +9,7 @@ export default class TransformableImage extends PureComponent {
             source: PropTypes.oneOfType([
                 PropTypes.object,
                 PropTypes.number
-            ]).isRequired,
+            ]),
             dimensions: PropTypes.shape({ width: PropTypes.number, height: PropTypes.number })
         }).isRequired,
         style: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
@@ -125,7 +125,7 @@ export default class TransformableImage extends PureComponent {
                 }
             );
         } else {
-            console.warn('react-native-image-gallery', 'Please provide dimensions of your local images');
+            this.setState({ error: true });
         }
     }
 
