@@ -89,7 +89,7 @@ export default class ViewPager extends PureComponent {
 
     componentWillMount () {
         this.gestureResponder = createResponder({
-            onStartShouldSetResponder: (evt, gestureState) => true,
+            onStartShouldSetResponder: (evt, gestureState) => false,
             onResponderGrant: this.onResponderGrant,
             onResponderMove: this.onResponderMove,
             onResponderRelease: this.onResponderRelease,
@@ -108,7 +108,7 @@ export default class ViewPager extends PureComponent {
 
         const finalX = this.getScrollOffsetOfPage(page);
         this.scroller.startScroll(this.scroller.getCurrX(), 0, finalX - this.scroller.getCurrX(), 0, 0);
-        
+
         requestAnimationFrame(() => {
             // this is here to work around a bug in FlatList, as discussed here
             // https://github.com/facebook/react-native/issues/1831

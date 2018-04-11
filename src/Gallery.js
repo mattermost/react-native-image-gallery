@@ -78,7 +78,7 @@ export default class Gallery extends PureComponent {
         };
 
         this.gestureResponder = createResponder({
-            onStartShouldSetResponderCapture: (evt, gestureState) => true,
+            onStartShouldSetResponderCapture: (evt, gestureState) => false,
             onStartShouldSetResponder: (evt, gestureState) => true,
             onResponderGrant: this.activeImageResponder,
             onResponderMove: (evt, gestureState) => {
