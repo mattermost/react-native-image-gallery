@@ -187,7 +187,7 @@ export default class TransformableImage extends PureComponent {
               onTransformGestureReleased={onTransformGestureReleased}
               onViewTransformed={onViewTransformed}
               onViewTransforming={onViewTransforming}
-              maxScale={maxScale}
+              maxScale={2}
               contentAspectRatio={contentAspectRatio}
               onLayout={this.onLayout}
               style={style}>

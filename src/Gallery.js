@@ -67,7 +67,7 @@ export default class Gallery extends PureComponent {
                     this.getViewPagerInstance().flingToPage(this.currentPage, gestureState.vx);
                 } else {
                     if (Math.abs(gestureState.vy) > 2) {
-                        this.props.onSwipedVertical && this.props.onSwipedVertical(evt, gestureState)
+                        this.props.onSwipedVertical && this.props.onSwipedVertical(evt, gestureState);
                     }
                     this.activeResponder.onEnd(evt, gestureState);
                 }
@@ -106,13 +106,12 @@ export default class Gallery extends PureComponent {
                         }
                     }
                 }
+
                 if (Math.abs(gestureState.dy) > Math.abs(gestureState.dx)) {
-                    this.activeResponder = this.imageResponder
-                } else {
-                    this.activeResponder = this.viewPagerResponder
+                    this.activeResponder = this.imageResponder;
                 }
 
-                this.activeResponder.onMove(evt, gestureState)
+                this.activeResponder.onMove(evt, gestureState);
             },
             onResponderRelease: onResponderReleaseOrTerminate,
             onResponderTerminate: onResponderReleaseOrTerminate,
