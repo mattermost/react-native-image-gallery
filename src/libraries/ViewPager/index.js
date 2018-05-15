@@ -65,14 +65,14 @@ export default class ViewPager extends PureComponent {
 
     createScroller () {
         return new Scroller(true, (dx, dy, scroller) => {
+            const curX = this.scroller.getCurrX();
+            this.refs['innerFlatList'] && this.refs['innerFlatList'].scrollToOffset({ offset: curX, animated: false });
+
             if (dx === 0 && dy === 0 && scroller.isFinished()) {
                 if (!this.activeGesture) {
                     this.onPageScrollStateChanged('idle');
                 }
             } else {
-                const curX = this.scroller.getCurrX();
-                this.refs['innerFlatList'] && this.refs['innerFlatList'].scrollToOffset({ offset: curX, animated: false });
-
                 let position = Math.floor(curX / (this.state.width + this.props.pageMargin));
                 position = this.validPage(position);
                 let offset = (curX - this.getScrollOffsetOfPage(position)) / (this.state.width + this.props.pageMargin);
@@ -207,7 +207,7 @@ export default class ViewPager extends PureComponent {
         page = this.validPage(page);
         this.onPageChanged(page);
 
-        velocityX *= -1000; // per sec
+        // velocityX *= -1000; // per sec
         const finalX = this.getScrollOffsetOfPage(page);
         this.scroller.fling(this.scroller.getCurrX(), 0, velocityX, 0, finalX, finalX, 0, 0);
     }
@@ -219,15 +219,15 @@ export default class ViewPager extends PureComponent {
         this.onPageChanged(page);
 
         const finalX = this.getScrollOffsetOfPage(page);
-        if (immediate) {
-            InteractionManager.runAfterInteractions(() => {
+        InteractionManager.runAfterInteractions(() => {
+            if (immediate) {
                 this.scroller.startScroll(this.scroller.getCurrX(), 0, finalX - this.scroller.getCurrX(), 0, 0);
                 this.refs['innerFlatList'] && this.refs['innerFlatList'].scrollToOffset({offset: finalX, animated: false});
                 this.refs['innerFlatList'] && this.refs['innerFlatList'].recordInteraction();
-            });
-        } else {
-            this.scroller.startScroll(this.scroller.getCurrX(), 0, finalX - this.scroller.getCurrX(), 0, 400);
-        }
+            } else {
+                this.scroller.startScroll(this.scroller.getCurrX(), 0, finalX - this.scroller.getCurrX(), 0, 400);
+            }
+        });
     }
 
     scrollByOffset (dx) {
@@ -315,22 +315,22 @@ export default class ViewPager extends PureComponent {
               {...this.props}
               style={[style, { flex: 1 }]}
               {...gestureResponder}>
-                <FlatList
-                  {...this.props.flatListProps}
-                  style={[{ flex: 1 }, scrollViewStyle]}
-                  ref={'innerFlatList'}
-                  keyExtractor={this.keyExtractor}
-                  scrollEnabled={false}
-                  horizontal={true}
-                  data={pageDataArray}
-                  renderItem={this.renderRow}
-                  onLayout={this.onLayout}
+              <FlatList
+                {...this.props.flatListProps}
+                style={[{ flex: 1 }, scrollViewStyle]}
+                ref={'innerFlatList'}
+                keyExtractor={this.keyExtractor}
+                scrollEnabled={false}
+                horizontal={true}
+                data={pageDataArray}
+                renderItem={this.renderRow}
+                onLayout={this.onLayout}
 
-                  // use contentOffset instead of initialScrollIndex so that we don't have
-                  // to use the buggy 'getItemLayout' prop. See
-                  // https://github.com/facebook/react-native/issues/15734#issuecomment-330616697 and
-                  // https://github.com/facebook/react-native/issues/14945#issuecomment-354651271
-                  contentOffset = {{x: this.getScrollOffsetOfPage(parseInt(this.props.initialPage)), y:0}}
+                // use contentOffset instead of initialScrollIndex so that we don't have
+                // to use the buggy 'getItemLayout' prop. See
+                // https://github.com/facebook/react-native/issues/15734#issuecomment-330616697 and
+                // https://github.com/facebook/react-native/issues/14945#issuecomment-354651271
+                contentOffset={{x: this.getScrollOffsetOfPage(parseInt(this.props.initialPage)), y: 0}}
               />
             </View>
         );
