@@ -46,11 +46,11 @@ export function fitCenterRect (contentAspectRatio, containerRect) {
     }
 
     return new Rect(
-    containerRect.centerX() - w / 2,
-    containerRect.centerY() - h / 2,
-    containerRect.centerX() + w / 2,
-    containerRect.centerY() + h / 2
-  );
+        containerRect.centerX() - w / 2,
+        containerRect.centerY() - h / 2,
+        containerRect.centerX() + w / 2,
+        containerRect.centerY() + h / 2
+    );
 }
 
 /**
@@ -80,11 +80,11 @@ export function transformedRect (rect, transform) {
         let centerY = rect.centerY() + translateY * scale;
 
         return new Rect(
-      centerX - width / 2,
-      centerY - height / 2,
-      centerX + width / 2,
-      centerY + height / 2
-    );
+            centerX - width / 2,
+            centerY - height / 2,
+            centerX + width / 2,
+            centerY + height / 2
+        );
     } else {
         let pivotX = pivot.x;
         let pivotY = pivot.y;
@@ -92,12 +92,12 @@ export function transformedRect (rect, transform) {
             throw new Error('transformedRect...invalid pivot x=' + pivot.x + ', y=' + pivot.y);
         }
 
-    // first make the center still
+        // first make the center still
         let resultRect = transformedRect(rect, {
             scale, translateX, translateY
         });
 
-    // the pivot moved during scaling, now move it back
+        // the pivot moved during scaling, now move it back
         let dx = (scale - 1) * (pivotX - resultRect.centerX());
         let dy = (scale - 1) * (pivotY - resultRect.centerY());
         return resultRect.offset(-dx, -dy);

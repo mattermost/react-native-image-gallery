@@ -9,7 +9,7 @@ function viscousFluid (x) {
     if (x < 1) {
         x -= (1 - Math.exp(-x));
     } else {
-        var start = 0.36787944117;   // 1/e == exp(-1)
+        const start = 0.36787944117;   // 1/e == exp(-1)
         x = 1 - Math.exp(1 - x);
         x = start + x * (1 - start);
     }
@@ -18,7 +18,7 @@ function viscousFluid (x) {
 
 const ViscousFluidInterpolator = {
     getInterpolation: function (input) {
-        var interpolated = VISCOUS_FLUID_NORMALIZE * viscousFluid(input);
+        const interpolated = VISCOUS_FLUID_NORMALIZE * viscousFluid(input);
         if (interpolated > 0) {
             return interpolated + VISCOUS_FLUID_OFFSET;
         }

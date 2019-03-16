@@ -11,7 +11,7 @@ const DEFAULT_FLAT_LIST_PROPS = {
 
 export default class Gallery extends PureComponent {
     static propTypes = {
-        ...View.propTypes,
+        ...ViewPropTypes,
         images: PropTypes.arrayOf(PropTypes.object),
         initialPage: PropTypes.number,
         scrollViewStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
@@ -43,19 +43,6 @@ export default class Gallery extends PureComponent {
     currentPage = 0;
     pageCount = 0;
     gestureResponder = undefined;
-
-    constructor (props) {
-        super(props);
-
-        this.renderPage = this.renderPage.bind(this);
-        this.onPageSelected = this.onPageSelected.bind(this);
-        this.onPageScrollStateChanged = this.onPageScrollStateChanged.bind(this);
-        this.getViewPagerInstance = this.getViewPagerInstance.bind(this);
-        this.getCurrentImageTransformer = this.getCurrentImageTransformer.bind(this);
-        this.getImageTransformer = this.getImageTransformer.bind(this);
-        this.getViewPagerInstance = this.getViewPagerInstance.bind(this);
-        this.activeImageResponder = this.activeImageResponder.bind(this);
-    }
 
     componentWillMount () {
         let onResponderReleaseOrTerminate = (evt, gestureState) => {
@@ -156,15 +143,7 @@ export default class Gallery extends PureComponent {
         };
     }
 
-    componentDidMount () {
-        this._isMounted = true;
-    }
-
-    componentWillUnmount () {
-        this._isMounted = false;
-    }
-
-    shouldScrollViewPager (evt, gestureState) {
+    shouldScrollViewPager = (evt, gestureState) => {
         if (gestureState.numberActiveTouches > 1) {
             return false;
         }
@@ -183,9 +162,9 @@ export default class Gallery extends PureComponent {
             return true;
         }
         return false;
-    }
+    };
 
-    activeImageResponder (evt, gestureState) {
+    activeImageResponder = (evt, gestureState) => {
         if (this.activeResponder !== this.imageResponder) {
             if (this.activeResponder === this.viewPagerResponder) {
                 this.viewPagerResponder.onEnd(evt, gestureState, true); // pass true to disable ViewPager settle
@@ -193,9 +172,9 @@ export default class Gallery extends PureComponent {
             this.activeResponder = this.imageResponder;
             this.imageResponder.onStart(evt, gestureState);
         }
-    }
+    };
 
-    activeViewPagerResponder (evt, gestureState) {
+    activeViewPagerResponder = (evt, gestureState) => {
         if (this.activeResponder !== this.viewPagerResponder) {
             if (this.activeResponder === this.imageResponder) {
                 this.imageResponder.onEnd(evt, gestureState);
@@ -203,38 +182,38 @@ export default class Gallery extends PureComponent {
             this.activeResponder = this.viewPagerResponder;
             this.viewPagerResponder.onStart(evt, gestureState);
         }
-    }
+    };
 
-    getImageTransformer (page) {
+    getImageTransformer = (page) => {
         if (page >= 0 && page < this.pageCount) {
             let ref = this.imageRefs.get(page);
             if (ref) {
                 return ref.getViewTransformerInstance();
             }
         }
-    }
+    };
 
-    getCurrentImageTransformer () {
+    getCurrentImageTransformer = () => {
         return this.getImageTransformer(this.currentPage);
-    }
+    };
 
-    getViewPagerInstance () {
+    getViewPagerInstance = () => {
         return this.refs['galleryViewPager'];
-    }
+    };
 
-    onPageSelected (page) {
+    onPageSelected = (page) => {
         this.currentPage = page;
         this.props.onPageSelected && this.props.onPageSelected(page);
-    }
+    };
 
-    onPageScrollStateChanged (state) {
+    onPageScrollStateChanged = (state) => {
         if (state === 'idle') {
             this.resetHistoryImageTransform();
         }
         this.props.onPageScrollStateChanged && this.props.onPageScrollStateChanged(state);
-    }
+    };
 
-    renderPage (pageData, pageId) {
+    renderPage = (pageData, pageId) => {
         const { onViewTransformed, onViewTransforming, onTransformGestureReleased, errorComponent, imageComponent } = this.props;
         return (
             <TransformableImage
@@ -256,9 +235,9 @@ export default class Gallery extends PureComponent {
               image={pageData}
             />
         );
-    }
+    };
 
-    resetHistoryImageTransform () {
+    resetHistoryImageTransform = () => {
         let transformer = this.getImageTransformer(this.currentPage + 1);
         if (transformer) {
             transformer.forceUpdateTransform({scale: 1, translateX: 0, translateY: 0});
@@ -268,7 +247,7 @@ export default class Gallery extends PureComponent {
         if (transformer) {
             transformer.forceUpdateTransform({scale: 1, translateX: 0, translateY: 0});
         }
-    }
+    };
 
     render () {
         let gestureResponder = this.gestureResponder;

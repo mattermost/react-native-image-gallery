@@ -5,22 +5,22 @@
 'use strict';
 
 var TouchHistoryMath = {
-  /**
-   * This code is optimized and not intended to look beautiful. This allows
-   * computing of touch centroids that have moved after `touchesChangedAfter`
-   * timeStamp. You can compute the current centroid involving all touches
-   * moves after `touchesChangedAfter`, or you can compute the previous
-   * centroid of all touches that were moved after `touchesChangedAfter`.
-   *
-   * @param {TouchHistoryMath} touchHistory Standard Responder touch track
-   * data.
-   * @param {number} touchesChangedAfter timeStamp after which moved touches
-   * are considered "actively moving" - not just "active".
-   * @param {boolean} isXAxis Consider `x` dimension vs. `y` dimension.
-   * @param {boolean} ofCurrent Compute current centroid for actively moving
-   * touches vs. previous centroid of now actively moving touches.
-   * @return {number} value of centroid in specified dimension.
-   */
+    /**
+     * This code is optimized and not intended to look beautiful. This allows
+     * computing of touch centroids that have moved after `touchesChangedAfter`
+     * timeStamp. You can compute the current centroid involving all touches
+     * moves after `touchesChangedAfter`, or you can compute the previous
+     * centroid of all touches that were moved after `touchesChangedAfter`.
+     *
+     * @param {TouchHistoryMath} touchHistory Standard Responder touch track
+     * data.
+     * @param {number} touchesChangedAfter timeStamp after which moved touches
+     * are considered "actively moving" - not just "active".
+     * @param {boolean} isXAxis Consider `x` dimension vs. `y` dimension.
+     * @param {boolean} ofCurrent Compute current centroid for actively moving
+     * touches vs. previous centroid of now actively moving touches.
+     * @return {number} value of centroid in specified dimension.
+     */
     centroidDimension: function (touchHistory, touchesChangedAfter, isXAxis, ofCurrent) {
         var touchBank = touchHistory.touchBank;
         var total = 0;
@@ -57,40 +57,40 @@ var TouchHistoryMath = {
 
     currentCentroidXOfTouchesChangedAfter: function (touchHistory, touchesChangedAfter) {
         return TouchHistoryMath.centroidDimension(touchHistory, touchesChangedAfter, true, // isXAxis
-    true // ofCurrent
-    );
+            true // ofCurrent
+        );
     },
 
     currentCentroidYOfTouchesChangedAfter: function (touchHistory, touchesChangedAfter) {
         return TouchHistoryMath.centroidDimension(touchHistory, touchesChangedAfter, false, // isXAxis
-    true // ofCurrent
-    );
+            true // ofCurrent
+        );
     },
 
     previousCentroidXOfTouchesChangedAfter: function (touchHistory, touchesChangedAfter) {
         return TouchHistoryMath.centroidDimension(touchHistory, touchesChangedAfter, true, // isXAxis
-    false // ofCurrent
-    );
+            false // ofCurrent
+        );
     },
 
     previousCentroidYOfTouchesChangedAfter: function (touchHistory, touchesChangedAfter) {
         return TouchHistoryMath.centroidDimension(touchHistory, touchesChangedAfter, false, // isXAxis
-    false // ofCurrent
-    );
+            false // ofCurrent
+        );
     },
 
     currentCentroidX: function (touchHistory) {
         return TouchHistoryMath.centroidDimension(touchHistory, 0, // touchesChangedAfter
-    true, // isXAxis
-    true // ofCurrent
-    );
+            true, // isXAxis
+            true // ofCurrent
+        );
     },
 
     currentCentroidY: function (touchHistory) {
         return TouchHistoryMath.centroidDimension(touchHistory, 0, // touchesChangedAfter
-    false, // isXAxis
-    true // ofCurrent
-    );
+            false, // isXAxis
+            true // ofCurrent
+        );
     },
 
     noCentroid: -1

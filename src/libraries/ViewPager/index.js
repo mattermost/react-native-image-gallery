@@ -18,7 +18,7 @@ const { width, height } = Dimensions.get('window');
 
 export default class ViewPager extends PureComponent {
     static propTypes = {
-        ...View.propTypes,
+        ...ViewPropTypes,
         initialPage: PropTypes.number,
         pageMargin: PropTypes.number,
         scrollViewStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
@@ -53,17 +53,10 @@ export default class ViewPager extends PureComponent {
     constructor (props) {
         super(props);
 
-        this.onLayout = this.onLayout.bind(this);
-        this.renderRow = this.renderRow.bind(this);
-        this.onResponderGrant = this.onResponderGrant.bind(this);
-        this.onResponderMove = this.onResponderMove.bind(this);
-        this.onResponderRelease = this.onResponderRelease.bind(this);
-        this.getItemLayout = this.getItemLayout.bind(this);
-
         this.scroller = this.createScroller();
     }
 
-    createScroller () {
+    createScroller = () => {
         return new Scroller(true, (dx, dy, scroller) => {
             const curX = this.scroller.getCurrX();
             this.refs['innerFlatList'] && this.refs['innerFlatList'].scrollToOffset({ offset: curX, animated: false });
@@ -85,7 +78,7 @@ export default class ViewPager extends PureComponent {
                 });
             }
         });
-    }
+    };
 
     componentWillMount () {
         this.gestureResponder = createResponder({
@@ -130,45 +123,45 @@ export default class ViewPager extends PureComponent {
         }
     }
 
-    onLayout (e) {
+    onLayout = (e) => {
         let { width, height } = e.nativeEvent.layout;
         let sizeChanged = this.state.width !== width || this.state.height !== height;
         if (width && height && sizeChanged) {
             this.layoutChanged = true;
             this.setState({ width, height });
         }
-    }
+    };
 
-    onResponderGrant (evt, gestureState) {
+    onResponderGrant = (evt, gestureState) => {
         // this.scroller.forceFinished(true);
         this.activeGesture = true;
         this.onPageScrollStateChanged('dragging');
-    }
+    };
 
-    onResponderMove (evt, gestureState) {
+    onResponderMove = (evt, gestureState) => {
         let dx = gestureState.moveX - gestureState.previousMoveX;
         this.scrollByOffset(dx);
-    }
+    };
 
-    onResponderRelease (evt, gestureState, disableSettle) {
+    onResponderRelease = (evt, gestureState, disableSettle) => {
         this.activeGesture = false;
         if (!disableSettle) {
             this.settlePage(gestureState.vx);
         }
-    }
+    };
 
-    onPageChanged (page) {
+    onPageChanged = (page) => {
         if (this.currentPage !== page) {
             this.currentPage = page;
             this.props.onPageSelected && this.props.onPageSelected(page);
         }
-    }
+    };
 
-    onPageScrollStateChanged (state) {
+    onPageScrollStateChanged = (state) => {
         this.props.onPageScrollStateChanged && this.props.onPageScrollStateChanged(state);
-    }
+    };
 
-    settlePage (vx) {
+    settlePage = (vx) => {
         const { pageDataArray } = this.props;
 
         if (vx < -MIN_FLING_VELOCITY) {
@@ -195,13 +188,13 @@ export default class ViewPager extends PureComponent {
             page = Math.max(0, page);
             this.scrollToPage(page);
         }
-    }
+    };
 
-    getScrollOffsetOfPage (page) {
+    getScrollOffsetOfPage = (page) => {
         return this.getItemLayout(this.props.pageDataArray, page).offset;
-    }
+    };
 
-    flingToPage (page, velocityX) {
+    flingToPage = (page, velocityX) => {
         this.onPageScrollStateChanged('settling');
 
         page = this.validPage(page);
@@ -210,9 +203,9 @@ export default class ViewPager extends PureComponent {
         // velocityX *= -1000; // per sec
         const finalX = this.getScrollOffsetOfPage(page);
         this.scroller.fling(this.scroller.getCurrX(), 0, velocityX, 0, finalX, finalX, 0, 0);
-    }
+    };
 
-    scrollToPage (page, immediate) {
+    scrollToPage = (page, immediate) => {
         this.onPageScrollStateChanged('settling');
 
         page = this.validPage(page);
@@ -228,23 +221,23 @@ export default class ViewPager extends PureComponent {
                 this.scroller.startScroll(this.scroller.getCurrX(), 0, finalX - this.scroller.getCurrX(), 0, 400);
             }
         });
-    }
+    };
 
-    scrollByOffset (dx) {
+    scrollByOffset = (dx) => {
         this.scroller.startScroll(this.scroller.getCurrX(), 0, -dx, 0, 0);
-    }
+    };
 
-    validPage (page) {
+    validPage = (page) => {
         page = Math.min(this.props.pageDataArray.length - 1, page);
         page = Math.max(0, page);
         return page;
-    }
+    };
 
-    getScrollOffsetFromCurrentPage () {
+    getScrollOffsetFromCurrentPage = () => {
         return this.scroller.getCurrX() - this.getScrollOffsetOfPage(this.currentPage);
-    }
+    };
 
-    getItemLayout (data, index) {
+    getItemLayout = (data, index) => {
         // this method is called 'getItemLayout', but it is not actually used
         // as the 'getItemLayout' function for the FlatList. We use it within
         // the code on this page though. The reason for this is that working
@@ -257,13 +250,13 @@ export default class ViewPager extends PureComponent {
             offset: (this.state.width + this.props.pageMargin) * index,
             index
         };
-    }
+    };
 
-    keyExtractor (item, index) {
+    keyExtractor = (item, index) => {
         return String(index);
-    }
+    };
 
-    renderRow ({ item, index }) {
+    renderRow = ({ item, index }) => {
         const { width, height } = this.state;
         let page = this.props.renderPage(item, index);
 
@@ -292,7 +285,7 @@ export default class ViewPager extends PureComponent {
         } else {
             return element;
         }
-    }
+    };
 
     render () {
         const { width, height } = this.state;
@@ -312,26 +305,26 @@ export default class ViewPager extends PureComponent {
 
         return (
             <View
-              {...this.props}
-              style={[style, { flex: 1 }]}
-              {...gestureResponder}>
-              <FlatList
-                {...this.props.flatListProps}
-                style={[{ flex: 1 }, scrollViewStyle]}
-                ref={'innerFlatList'}
-                keyExtractor={this.keyExtractor}
-                scrollEnabled={false}
-                horizontal={true}
-                data={pageDataArray}
-                renderItem={this.renderRow}
-                onLayout={this.onLayout}
+                {...this.props}
+                style={[style, { flex: 1 }]}
+                {...gestureResponder}>
+                <FlatList
+                    {...this.props.flatListProps}
+                    style={[{ flex: 1 }, scrollViewStyle]}
+                    ref={'innerFlatList'}
+                    keyExtractor={this.keyExtractor}
+                    scrollEnabled={false}
+                    horizontal={true}
+                    data={pageDataArray}
+                    renderItem={this.renderRow}
+                    onLayout={this.onLayout}
 
-                // use contentOffset instead of initialScrollIndex so that we don't have
-                // to use the buggy 'getItemLayout' prop. See
-                // https://github.com/facebook/react-native/issues/15734#issuecomment-330616697 and
-                // https://github.com/facebook/react-native/issues/14945#issuecomment-354651271
-                contentOffset={{x: this.getScrollOffsetOfPage(parseInt(this.props.initialPage)), y: 0}}
-              />
+                    // use contentOffset instead of initialScrollIndex so that we don't have
+                    // to use the buggy 'getItemLayout' prop. See
+                    // https://github.com/facebook/react-native/issues/15734#issuecomment-330616697 and
+                    // https://github.com/facebook/react-native/issues/14945#issuecomment-354651271
+                    contentOffset={{x: this.getScrollOffsetOfPage(parseInt(this.props.initialPage)), y: 0}}
+                />
             </View>
         );
     }
