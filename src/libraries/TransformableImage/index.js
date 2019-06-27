@@ -60,7 +60,7 @@ export default class TransformableImage extends PureComponent {
     componentWillReceiveProps (nextProps) {
         if (!sameImage(this.props.image, nextProps.image)) {
             // image source changed, clear last image's imageDimensions info if any
-            this.setState({ imageDimensions: nextProps.image.dimensions, keyAcumulator: this.state.keyAcumulator + 1 });
+            this.setState({ imageDimensions: nextProps.image.dimensions, keyAcumulator: this.state.keyAcumulator + 1, error: false });
             if (!nextProps.image.dimensions) { // if we don't have image dimensions provided in source
                 this.getImageSize(nextProps.image);
             }
